@@ -1,3 +1,6 @@
+let s:buffername = "BufferTree"
+let s:previousWinId = -1
+
 function! PressedEnter()
   let current_line_contents = getline('.')
   let file_regex            = '\v^(:?├|─|└|│|\s)+[◎•] *(\w|\.|\/|-)+ ⇒ (\d+)$'
@@ -28,7 +31,7 @@ function! PressedEnter()
     execute "bd"
   endif
 
-  execute "wincmd p"
+  execute "tabnew"
   execute "b" . match[3]
 endfunction
 
@@ -82,7 +85,7 @@ endfunction
 function! RefreshBuffer()
   let result = buffer#RefreshBuffer()
   let b:allowed_lines = result[1]
-  call cursor(result[0], 0)
+  " call cursor(result[0], 0)
 endfunction
 
 function! explorer#Explore()
@@ -92,7 +95,7 @@ function! explorer#Explore()
   let result = buffer#MakeBuffer(tree, previous_buffer)
 
   let b:allowed_lines = result[1]
-  call cursor(result[0], 0)
+  " call cursor(result[0], 0)
 
   nnoremap <buffer> <silent> <CR> :call PressedEnter()<cr>
   nnoremap <buffer> <silent> k :call ScrollUp()<cr>
@@ -105,4 +108,31 @@ function! explorer#Explore()
     au VimEnter,WinEnter,BufWinEnter [^BufferTree] call RefreshBuffer()
   augroup END
 
+endfunction
+
+function! s:Close()
+  let bufnr = bufnr(s:buffername)
+  if bufnr > 0 && bufexists(bufnr)
+    if s:previousWinId > 0
+      call win_gotoid(s:previousWinId)
+    endif
+    execute 'bwipeout! ' . bufnr
+  endif
+endfunction
+
+function! explorer#Toggle()
+  let bufnr = bufnr(s:buffername)
+  if bufnr > 0 && bufexists(bufnr)
+    call s:Close()
+    for i in range(1, bufnr('$'))
+      if !filereadable(fnamemodify(bufname(bufnr(i)), ":p"))
+        if &buftype == "terminal"
+        else
+            silent! exe 'bdelete! ' . i
+        endif
+      endif
+    endfor
+  else
+    call explorer#Explore()
+  endif
 endfunction

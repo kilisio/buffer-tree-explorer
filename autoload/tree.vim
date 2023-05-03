@@ -50,7 +50,7 @@ endfunction
 
 function! GetLinesHelper(tree, lines, offset, vlines, fill, open_windows)
 
-  let items = items(a:tree)
+  let items = sort(items(a:tree))
 
   while len(items) > 0
 

@@ -11,3 +11,4 @@ if !exists('g:buffertree_close_on_enter')
 endif
 
 command! Tree :call explorer#Explore()
+command! TreeToggle :call explorer#Toggle()

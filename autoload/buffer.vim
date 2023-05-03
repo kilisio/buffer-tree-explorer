@@ -4,19 +4,67 @@ let s:file_regex = '\v^(:?├|─|└|│|\s)+[◎•]*\s*(\w|\.|\/|-)+ ⇒ (\d+
 function! buffer#MakeBuffer(contents, current_buffer_number)
 
   " make buffer and set attributes
-  vnew
+  " exec ':to 60 vnew'
+  aboveleft vnew
   setlocal nobuflisted noswapfile wrap buftype=nofile bufhidden=delete nonu nornu nocursorline
   execute ":file BufferTree"
 
-  syntax match TreeWindowFile /\v◎ (\w|\.|\/|-)+ ⇒ (\d+)$/
+  syntax match TreeCurrentBufferFile /\v◎ (\w|\.|\/|-)+ ⇒ (\d+)$/
   syntax match TreePath /\v(\w|\.|\/|-)+$/
-  syntax match TreeFile /\v•(\w|\.|\/|-)+ ⇒ (\d+)$/
+  syntax match TreeFile /\v• (\w|\.|\/|-)+/
+  syntax match TreeFilePath /\v• (\w|\.|\/|-).*\//
   syntax match TreeBranch /\v(├|─|└|│)/
 
-  highlight TreePath ctermfg=242
-  highlight TreeFile ctermfg=white
-  highlight TreeWindowFile cterm=bold ctermfg=white
-  highlight TreeBranch ctermfg=green
+  highlight TreePath guifg=white gui=italic
+  highlight TreeFilePath guifg=white gui=italic
+  highlight TreeFile guifg=gray
+  highlight TreeCurrentBufferFile gui=bold guifg=yellow
+  highlight TreeBranch guifg=white
+
+  " typescript
+  syntax match TypescriptFile /\v(•\s|\w|\.|-)*\.ts/
+  highlight TypescriptFile guifg=#b57614
+  " markdown
+  syntax match MarkdownFile /\v(•\s|\w|\.|-)*\.md/
+  highlight MarkdownFile guifg=#d5c4a1
+  " bash
+  syntax match BashFile /\v(•\s|\w|\.|-)*\.sh/
+  highlight BashFile guifg=#a89984
+  " kotlin
+  syntax match KtFile /\v(•\s|\w|\.|-)*\.kt/
+  highlight KtFile guifg=#d65d0e
+  syntax match KtsFile /\v(•\s|\w|\.|-)*\.kts/
+  highlight KtsFile guifg=#d65d0e
+  " javascript
+  syntax match JavascriptFile /\v(•\s|\w|\.|-)*\.js/
+  highlight JavascriptFile guifg=#98971a
+  " json
+  syntax match JsonFile /\v(•\s|\w|\.|-)*\.json/
+  highlight JsonFile guifg=#b8bb26
+  " rust
+  syntax match RustFile /\v(•\s|\w|\.|-)*\.rs/
+  highlight RustFile guifg=#9d0006
+  " html
+  syntax match HtmlFile /\v(•\s|\w|\.|-)*\.html/
+  highlight HtmlFile guifg=#458588
+  " css
+  syntax match CssFile /\v(•\s|\w|\.|-)*\.css/
+  highlight CssFile guifg=#83a598
+  " yaml
+  syntax match YamlFile /\v(•\s|\w|\.|-)*\.yaml/
+  highlight YamlFile guifg=#8ec07c
+  " text
+  syntax match TextFile /\v(•\s|\w|\.|-)*\.txt/
+  highlight TextFile guifg=#fbf1c7
+  " go
+  syntax match GoFile /\v(•\s|\w|\.|-)*\.go/
+  highlight GoFile guifg=#fabd2f
+  " python
+  syntax match PythonFile /\v(•\s|\w|\.|-)*\.py/
+  highlight PythonFile guifg=#427b58
+  " toml
+  syntax match TomlFile /\v(•\s|\w|\.|-)*\.toml/
+  highlight TomlFile guifg=#d79921
 
   let allowed_lines = []
   let bufferline = -1
