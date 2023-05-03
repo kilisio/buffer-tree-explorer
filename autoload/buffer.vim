@@ -4,8 +4,7 @@ let s:file_regex = '\v^(:?├|─|└|│|\s)+[◎•]*\s*(\w|\.|\/|-)+ ⇒ (\d+
 function! buffer#MakeBuffer(contents, current_buffer_number)
 
   " make buffer and set attributes
-  " exec ':to 60 vnew'
-  aboveleft vnew
+  aboveleft 60 vnew
   setlocal nobuflisted noswapfile wrap buftype=nofile bufhidden=delete nonu nornu nocursorline
   execute ":file BufferTree"
 
